@@ -11,31 +11,20 @@ class CleaningAgent(mesa.Agent):
         self.moves = 0  # Contador de movimientos realizados por el agente
 
     def step(self):
-        # Obtener el contenido de la celda actual
+        # Si la celda está sucia, límpiala
         cell_content = self.model.grid.get_cell_list_contents([self.pos])
-        
-        # Buscar suciedad en la celda actual
         dirt_objects = [obj for obj in cell_content if isinstance(obj, Dirt)]
         if dirt_objects:
-            # Si la celda está sucia, eliminar el objeto de suciedad
+            # Remover el objeto de suciedad si está en la misma posición
             self.model.grid.remove_agent(dirt_objects[0])
         else:
-            # Buscar en las celdas vecinas para ver si hay alguna con suciedad
-            possible_steps = self.model.grid.get_neighborhood(self.pos, moore=True, include_center=False)
-            dirty_neighbors = [
-                cell for cell in possible_steps 
-                if any(isinstance(obj, Dirt) for obj in self.model.grid.get_cell_list_contents([cell]))
-            ]
-            
-            if dirty_neighbors:
-                # Si hay celdas vecinas sucias, moverse a una de ellas
-                new_position = self.random.choice(dirty_neighbors)
-            else:
-                # Si no hay celdas vecinas sucias, moverse a una celda aleatoria
-                new_position = self.random.choice(possible_steps)
-            
-            # Mover el agente a la nueva posición
-            self.model.grid.move_agent(self, new_position)
+            # Moverse a una celda vecina aleatoria
+            possible_steps = self.model.grid.get_neighborhood(
+                self.pos, moore=True, include_center=False
+            )
+            new_position = self.random.choice(possible_steps)
+            if self.model.grid.is_cell_empty(new_position):
+                self.model.grid.move_agent(self, new_position)
             self.moves += 1  # Incrementa el contador de movimientos
 
 class Dirt(mesa.Agent):
