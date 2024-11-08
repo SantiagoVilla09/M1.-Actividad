@@ -1,4 +1,4 @@
-from Cleaning_Model2 import CleaningModel
+from Cleaning_Model import CleaningModel
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import Slider, NumberInput

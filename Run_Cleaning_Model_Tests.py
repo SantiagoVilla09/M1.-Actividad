@@ -1,4 +1,4 @@
-from Cleaning_Model2 import CleaningModel
+from Cleaning_Model import CleaningModel
 import matplotlib.pyplot as plt
 
 # Variables iniciales
