@@ -3,9 +3,9 @@
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import NumberInput, Slider
-from cleaning_model import CleaningModel, CleaningAgent
+from cleaning_model import CleaningModel, CleaningAgent, Dirt
 
-def agent_and_cell_portrayal(agent):
+def agent_and_dirt_portrayal(agent):
     if isinstance(agent, CleaningAgent):
         # Representación de cada agente de limpieza
         return {
@@ -15,25 +15,19 @@ def agent_and_cell_portrayal(agent):
             "Layer": 1,
             "r": 0.5
         }
-
-def dirty_cell_portrayal(model):
-    # Representación de las celdas sucias
-    portrayal = {}
-    for (x, y), is_dirty in model.dirty_cells.items():
-        if is_dirty:
-            portrayal[(x, y)] = {
-                "Shape": "rect",
-                "Color": "brown",
-                "Filled": "true",
-                "Layer": 3,
-                "w": 1,
-                "h": 1
-            }
-    return portrayal
+    elif isinstance(agent, Dirt):
+        # Representación de suciedad como círculo marrón
+        return {
+            "Shape": "circle",
+            "Color": "brown",
+            "Filled": "true",
+            "Layer": 0,
+            "r": 0.3
+        }
 
 # Configuración de la visualización del grid
 width, height = 10, 10
-grid = CanvasGrid(agent_and_cell_portrayal, width, height, 500, 500)
+grid = CanvasGrid(agent_and_dirt_portrayal, width, height, 500, 500)
 
 # Crear el servidor para ejecutar la simulación en el navegador
 server = ModularServer(
@@ -52,4 +46,3 @@ server = ModularServer(
 # Ejecutar el servidor
 server.port = 8521
 server.launch()
-
